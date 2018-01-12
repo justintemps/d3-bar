@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>D3 Bar Chart</title>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+  </head>
+  <body>
+    <svg></svg>
+    <script>
+var WIDTH = 800;
+var HEIGHT = 800;
+var MARGIN = { top: 20, bottom: 20, left: 20, right: 20 };
+
+var currentCat = 'Sector: agriculture';
+
+d3.csv('data.csv', function(err, data) {
+
+  // Get rid of source
+  data.forEach(function(d) {
+    delete d.source;
+  })
+
+  // Get rid of any datasets with holes
+  data = data.filter(function(d) {
+    var dataMissing = false;
+    for (var key in d) {
+      if (d[key].length === 0) {
+          dataMissing = true;
+        };
+    }
+    if (d.category === currentCat && dataMissing === false) {
+      return d;
+    }
+  });
+
+  var xExtent = d3.extent(data, d => d.country);
+  var xScale = d3.scaleOrdinal()
+    .domain(xExtent)
+    .range([margin.left, width - margin.right]);
+
+});
+</script>
+  </body>
+</html>
