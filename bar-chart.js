@@ -1,29 +1,61 @@
-/* globals d3 */
+/* globals d3 isNaN */
 
-const width = 600;
-const height = 600;
-const margin = {
-  top: 20,
-  bottom: 20,
-  left: 40,
-  right: 20
-};
+// grouped bar chart: https://bl.ocks.org/mbostock/3887051
 
-const currentCat = 'Sector: agriculture';
+const currentCategory = 'Sector: agriculture';
 
+const svg = d3.select('svg');
+const margin = { top: 20, right: 20, bottom: 30, left: 40 };
+const width = +svg.attr('width') - margin.left - margin.right;
+const height = +svg.attr('height') - margin.top - margin.bottom;
+const g = svg
+  .append('g')
+  .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+// Scale for the long x-Axis
+const x0 = d3
+  .scaleBand()
+  .rangeRound([0, width])
+  .paddingInner(0.1);
+
+// Scale for the groups of bars
+const x1 = d3.scaleBand().padding(0.05);
+
+// Scale for the y-axis
+const y = d3.scaleLinear().rangeRound([height, 0]);
+
+// Scale for the groups of bars
+const z = d3
+  .scaleOrdinal()
+  .range([
+    '#98abc5',
+    '#8a89a6',
+    '#7b6888',
+    '#6b486b',
+    '#a05d56',
+    '#d0743c',
+    '#ff8c00'
+  ]);
+
+// Get the data
 d3.csv('data.csv', (err, res) => {
-  // First select the svg
-  const svg = d3.select('svg');
-
-  // Then let's clean the data...
-  // Get rid of source in data if it's empty
+  // Turn strings into numbers if they're numbers
   res.forEach(d => {
+    /* eslint-disable */
+    for (let val in d) {
+      if (d[val].length !== 0 && !isNaN(d[val])) {
+        /* eslint-disable */
+        d[val] = +d[val];
+      }
+    }
+
+    // Get rid of source column if it's empty
     if (d.source.length === 0) {
       delete d.source; // eslint-disable-line
     }
   });
 
-  // Get rid of any datasets with missing values
+  // Filter according to current category, don't use missing data
   const data = res.filter(d => {
     let dataMissing = false;
     Object.values(d).forEach(val => {
@@ -31,53 +63,56 @@ d3.csv('data.csv', (err, res) => {
         dataMissing = true;
       }
     });
-    if (d.category === currentCat && dataMissing === false) {
+    if (d.category === currentCategory && dataMissing === false) {
       return true;
     }
     return false;
   });
 
-  const yMax = d3.max(data, d => d.total);
+  // Create a list of keys with number values
+  const keys = data => {
+    let obj = data[0];
+    for (key in obj) {
+      if (!isNaN(obj[key])) {
+        
+      }
+    }
+  }()
 
-  const yScale = d3
-    .scaleLinear()
-    .domain([0, yMax])
-    .range([height - margin.bottom, margin.top]);
+/*
+  x0.domain(data.map(d => d.country));
+  x1.domain(keys).rangeRound([0, x0.bandwidth()]);
+  y.domain([0, d3.max(data, d => d3.max(keys, key => d[key]))]);
 
-  const heightScale = d3
-    .scaleLinear()
-    .domain([0, yMax])
-    .range([0, height - margin.top - margin.bottom]);
-
-  const yAxis = d3.axisLeft().scale(yScale);
-
-  const xScale = d3
-    .scaleBand()
-    .domain(data.map(d => d.country))
-    .range([margin.left, width - margin.right]);
-
-  const xAxis = d3.axisBottom().scale(xScale);
-
-  svg
+  g
     .append('g')
-    .attr('transform', `translate(${[0, height - margin.bottom]})`)
-    .call(xAxis);
-  svg
-    .append('g')
-    .attr('transform', `translate(${[margin.left, 0]})`)
-    .call(yAxis);
-
-  const barWidth = (width - margin.right - margin.left) / data.length;
-
-  const rect = svg
-    .selectAll('rect')
+    .selectAll('g')
     .data(data)
     .enter()
+    .append('g')
+    .attr('transform', d => `translate(${x0(d.country)},0)`)
+    .selectAll('rect');
+  //  .data(d => keys.map(key => ({key: key, value: })))
+
+
+  g
+    .append('g')
+    .selectAll('g')
+    .data(data)
+    .enter()
+    .append('g')
+    .attr('transform', d => `translate(${x0(d.country)},0)`)
+    .selectAll('rect')
+    .data(d => keys.map(key => {
+      console.log({ key: key, value: d[key] });
+      return ({ key: key, value: d[key] });
+    }))
+    .enter()
     .append('rect')
-    .attr('width', barWidth - 15)
-    .attr('height', d => heightScale(d.total))
-    .attr('x', d => xScale(d.country))
-    .attr('y', d => yScale(d.total))
-    .attr('fill', 'blue')
-    .attr('stroke', 'white');
+    .attr('x', d => x1(d.key))
+    .attr('y', d => y(d.value))
+    .attr('width', x1.bandwidth())
+    .attr('height', d => height - y(d.value))
+    .attr('fill', d => z(d.key));
+*/
 });
