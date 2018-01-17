@@ -37,82 +37,41 @@ const z = d3
     '#ff8c00'
   ]);
 
-// Get the data
-d3.csv('data.csv', (err, res) => {
-  // Turn strings into numbers if they're numbers
-  res.forEach(d => {
+function normalize(i, d, columns) {
+  // Get data for current category while filtering out rows with missing values
+  const data = d.filter(
+    obj =>
+      obj.category === currentCategory &&
+      Object.values(obj).every(o => o.length > 0)
+  );
+  data.forEach(o => {
     /* eslint-disable */
-    for (let val in d) {
-      if (d[val].length !== 0 && !isNaN(d[val])) {
+    for (let key in o) {
+      if (!isNaN(o[key])) {
+        o[key] = +o[key];
         /* eslint-disable */
-        d[val] = +d[val];
       }
-    }
-
-    // Get rid of source column if it's empty
-    if (d.source.length === 0) {
-      delete d.source; // eslint-disable-line
     }
   });
+  return data;
+}
 
-  // Filter according to current category, don't use missing data
-  const data = res.filter(d => {
-    let dataMissing = false;
-    Object.values(d).forEach(val => {
-      if (val.length === 0) {
-        dataMissing = true;
+d3.csv('data.csv', (i, d, columns) => {
+  const data = d.filter(
+    obj =>
+      obj.category === currentCategory &&
+      Object.values(obj).every(o => o.length > 0)
+  );
+  data.forEach(o => {
+    /* eslint-disable */
+    for (let key in o) {
+      if (!isNaN(o[key])) {
+        o[key] = +o[key];
+        /* eslint-disable */
       }
-    });
-    if (d.category === currentCategory && dataMissing === false) {
-      return true;
     }
-    return false;
   });
-
-  // Create a list of keys with number values
-  const keys = data => {
-    let obj = data[0];
-    for (key in obj) {
-      if (!isNaN(obj[key])) {
-        
-      }
-    }
-  }()
-
-/*
-  x0.domain(data.map(d => d.country));
-  x1.domain(keys).rangeRound([0, x0.bandwidth()]);
-  y.domain([0, d3.max(data, d => d3.max(keys, key => d[key]))]);
-
-  g
-    .append('g')
-    .selectAll('g')
-    .data(data)
-    .enter()
-    .append('g')
-    .attr('transform', d => `translate(${x0(d.country)},0)`)
-    .selectAll('rect');
-  //  .data(d => keys.map(key => ({key: key, value: })))
-
-
-  g
-    .append('g')
-    .selectAll('g')
-    .data(data)
-    .enter()
-    .append('g')
-    .attr('transform', d => `translate(${x0(d.country)},0)`)
-    .selectAll('rect')
-    .data(d => keys.map(key => {
-      console.log({ key: key, value: d[key] });
-      return ({ key: key, value: d[key] });
-    }))
-    .enter()
-    .append('rect')
-    .attr('x', d => x1(d.key))
-    .attr('y', d => y(d.value))
-    .attr('width', x1.bandwidth())
-    .attr('height', d => height - y(d.value))
-    .attr('fill', d => z(d.key));
-*/
-});
+  return data;
+}), function(error, data) {
+  console.log(data);
+};
