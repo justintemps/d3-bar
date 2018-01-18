@@ -1,7 +1,5 @@
 /* globals d3 isNaN */
 
-// grouped bar chart: https://bl.ocks.org/mbostock/3887051
-
 const currentCategory = 'Sector: agriculture';
 
 const svg = d3.select('svg');
@@ -37,41 +35,75 @@ const z = d3
     '#ff8c00'
   ]);
 
-function normalize(i, d, columns) {
-  // Get data for current category while filtering out rows with missing values
-  const data = d.filter(
-    obj =>
-      obj.category === currentCategory &&
-      Object.values(obj).every(o => o.length > 0)
-  );
-  data.forEach(o => {
-    /* eslint-disable */
-    for (let key in o) {
-      if (!isNaN(o[key])) {
-        o[key] = +o[key];
-        /* eslint-disable */
-      }
-    }
-  });
-  return data;
-}
+d3.csv(
+  'data.csv',
 
-d3.csv('data.csv', (i, d, columns) => {
-  const data = d.filter(
-    obj =>
-      obj.category === currentCategory &&
-      Object.values(obj).every(o => o.length > 0)
-  );
-  data.forEach(o => {
-    /* eslint-disable */
-    for (let key in o) {
-      if (!isNaN(o[key])) {
-        o[key] = +o[key];
-        /* eslint-disable */
+  // Normalize the data
+  (d, i, columns) => {
+    for (let j = 0, n = columns.length; j < n; ++j)
+      if (!isNaN(d[columns[j]])) {
+        d[columns[j]] = +d[columns[j]];
       }
-    }
-  });
-  return data;
-}), function(error, data) {
-  console.log(data);
-};
+    return d;
+  },
+
+  // Get data for currently selected category
+  // Filter out rows with empty cells
+  (err, data) => {
+    const currentData = data.filter(
+      obj =>
+        obj.category === currentCategory &&
+        Object.values(obj).every(o => {
+          if (!isNaN(o) && o === 0) {
+            return false;
+          }
+          return true;
+        })
+    );
+
+    const keys = data.columns.slice(2);
+
+    x0.domain(currentData.map(obj => obj.country));
+    x1.domain(keys).rangeRound([0, x0.bandwidth()]);
+    y.domain([0, d3.max(currentData, d => d3.max(keys, key => d[key]))]);
+
+    // Bars
+    g
+      .append('g')
+      .selectAll('g')
+      .data(currentData)
+      .enter()
+      .append('g')
+      .attr('transform', d => `translate(${x0(d.country)},0)`)
+      .selectAll('rect')
+      .data(d => keys.map(key => ({ key, value: d[key] })))
+      .enter()
+      .append('rect')
+      .attr('x', d => x1(d.key))
+      .attr('y', d => y(d.value))
+      .attr('width', x1.bandwidth())
+      .attr('height', d => height - y(d.value))
+      .attr('fill', d => z(d.key));
+
+    // X-Axis
+    g
+      .append('g')
+      .attr('class', 'axis')
+      .attr('transform', `translate(0,${height})`)
+      .call(d3.axisBottom(x0));
+
+    // Y-Axis
+    g
+      .append('g')
+      .attr('class', 'axis')
+      .call(d3.axisLeft(y).ticks(null, 's'))
+      .append('text')
+      .attr('x', 2)
+      .attr('y', y(y.ticks().pop()) + 0.5)
+      .attr('dy', '0.32em')
+      .attr('fill', '#000')
+      .attr('font-weight', 'bold')
+      .attr('text-anchor', 'start')
+      .text(currentCategory);
+  }
+);
