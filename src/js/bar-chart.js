@@ -56,14 +56,14 @@ function drawChart() {
       // X-Axis
       g
         .append('g')
-        .attr('class', 'axis')
+        .attr('class', 'x-axis')
         .attr('transform', `translate(0,${height})`)
         .call(d3.axisBottom(x0));
 
       // Y-Axis
       g
         .append('g')
-        .attr('class', 'axis')
+        .attr('class', 'y-axis')
         .call(d3.axisLeft(y).ticks(null, 's'))
         .append('text')
         .attr('x', 2)
