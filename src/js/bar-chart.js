@@ -4,7 +4,7 @@ import normalize from './normalize';
 import filter from './filter';
 
 const { csv, category, margin, colors } = settings;
-const currentCategory = category.lowSkill;
+const currentCategory = category.agriculture;
 const svg = d3.select('svg');
 const width = +svg.attr('width') - margin.left - margin.right;
 const height = +svg.attr('height') - margin.top - margin.bottom;
@@ -36,7 +36,7 @@ function drawChart() {
       // Bars
       g
         .append('g')
-        .attr('class', 'bars')
+        .attr('class', 'plotarea')
         .selectAll('g')
         .data(currentData)
         .enter()

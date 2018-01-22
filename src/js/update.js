@@ -25,8 +25,10 @@ function updateBars(currentCategory) {
     x1.domain(keys).rangeRound([0, x0.bandwidth()]);
     y.domain([0, d3.max(currentData, d => d3.max(keys, key => d[key]))]);
 
-    let countries = svg.selectAll('.country');
-    countries.data(currentData, d => d.country);
+    let countries = d3
+      .select('.plotarea')
+      .selectAll('.country')
+      .data(currentData, d => d.country);
 
     // Exit
     countries.exit().remove();
@@ -35,11 +37,12 @@ function updateBars(currentCategory) {
     const enter = countries
       .enter()
       .append('g')
-      .attr('class', '.country')
-      .attr('transform', d => `translate(${x0(d.country)},0)`);
+      .attr('class', '.country');
 
     // Merge
-    countries = enter.merge(countries); // estlint-disable-line
+    countries = enter
+      .merge(countries)
+      .attr('transform', d => `translate(${x0(d.country)},0)`); // estlint-disable-line
 
     let bars = countries
       .selectAll('rect')
@@ -63,5 +66,5 @@ function updateBars(currentCategory) {
 }
 
 button.addEventListener('click', () => {
-  updateBars(category.agriculture);
+  updateBars(category.lowSkill);
 });
