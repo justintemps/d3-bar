@@ -1,16 +1,17 @@
 const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   context: __dirname,
-  entry: './src/js/app.js',
+  entry: ['./app.js'],
   devtool: 'source-map',
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'bundle.js'
+    publicPath: '/'
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.json']
+    extensions: ['.js', '.js', '.json']
   },
   stats: {
     colors: true,
@@ -18,12 +19,16 @@ module.exports = {
     chunks: false
   },
   devServer: {
-    publicPath: '/dist/'
+    contentBase: './dist'
   },
   plugins: [
     new ExtractTextPlugin({
       filename: 'bundle.css',
       allChunks: true
+    }),
+    new HtmlWebpackPlugin({
+      template: './index.ejs',
+      inject: 'body'
     })
   ],
   module: {
@@ -36,7 +41,8 @@ module.exports = {
       },
       {
         test: /\.js/,
-        loader: 'babel-loader'
+        loader: 'babel-loader',
+        include: [path.resolve('src/js')]
       },
       {
         test: /\.css$/,
