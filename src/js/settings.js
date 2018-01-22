@@ -10,7 +10,7 @@ export default {
   margin: {
     top: 20,
     right: 20,
-    bottom: 30,
+    bottom: 80,
     left: 40
   },
   colors: [

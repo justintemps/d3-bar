@@ -80,8 +80,7 @@ function drawChart() {
         .attr('fill', '#000')
         .attr('font-weight', 'bold')
         .attr('text-anchor', 'start')
-        .text(currentCategory);
-      /*
+
       const legend = g.append('g')
         .attr('font-family', 'sans-serif')
         .style('font-size,', 8)
@@ -102,7 +101,7 @@ function drawChart() {
         .attr('y', 9.5)
         .attr('dy', '0.32em')
         .text(d => d);
-*/
+
     }
   );
 }
