@@ -25,11 +25,8 @@ function updateBars(currentCategory) {
     x1.domain(keys).rangeRound([0, x0.bandwidth()]);
     y.domain([0, d3.max(currentData, d => d3.max(keys, key => d[key]))]);
 
-    // Update countries
-    let countries = svg.selectAll('.countries').data(currentData, d => {
-      console.log(d.country);
-      return d.country;
-    });
+    let countries = svg.selectAll('.country');
+    countries.data(currentData, d => d.country);
 
     // Exit
     countries.exit().remove();
