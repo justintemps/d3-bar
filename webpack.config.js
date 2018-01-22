@@ -37,7 +37,10 @@ module.exports = {
         enforce: 'pre',
         test: /\.js$/,
         loader: 'eslint-loader',
-        exclude: /node_modules/
+        exclude: /node_modules/,
+        options: {
+          emitWarning: true
+        }
       },
       {
         test: /\.js/,
@@ -54,6 +57,10 @@ module.exports = {
         test: /\.(sass|scss)$/,
         loader: ExtractTextPlugin.extract(['css-loader', 'sass-loader'])
       },
+      {
+        test: /\.csv$/,
+        loader: 'raw-loader'
+      }
     ]
   }
 };
