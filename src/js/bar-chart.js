@@ -2,6 +2,7 @@ import * as d3 from 'd3';
 import settings from './settings';
 import normalize from './normalize';
 import filter from './filter';
+import setMenu from './menu';
 
 const { csv, category, margin, colors } = settings;
 const currentCategory = category.agriculture;
@@ -26,6 +27,13 @@ function drawChart() {
     // Get data for currently selected category
     // Filter out rows with empty cells
     (err, data) => {
+      // Set the pull down menu
+      setMenu(
+        data
+          .map(d => d.category)
+          .filter((item, i, ar) => ar.indexOf(item) === i)
+      );
+
       const currentData = filter(data, currentCategory);
       const keys = data.columns.slice(2);
 

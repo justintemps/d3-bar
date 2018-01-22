@@ -3,13 +3,12 @@ import normalize from './normalize';
 import settings from './settings';
 import filter from './filter';
 
-const { csv, category, margin, colors } = settings;
+const { csv, margin, colors } = settings;
 const svg = d3.select('svg');
-const button = document.getElementById('update-chart');
 const width = +svg.attr('width') - margin.left - margin.right;
 const height = +svg.attr('height') - margin.top - margin.bottom;
 
-function updateBars(currentCategory) {
+function update(currentCategory) {
   d3.csv(csv, normalize, (err, data) => {
     const currentData = filter(data, currentCategory);
     const keys = data.columns.slice(2);
@@ -72,6 +71,4 @@ function updateBars(currentCategory) {
   });
 }
 
-button.addEventListener('click', () => {
-  updateBars(category.lowSkill);
-});
+export default update;
