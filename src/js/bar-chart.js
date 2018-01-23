@@ -107,9 +107,9 @@ function drawChart() {
         .attr('transform', (d, i) => {
           if (i + 1 <= 3) {
             return `translate(0, ${i * 30})`;
-          } else if (i + 1 >=3 && i + 1 <= 6) {
-              return `translate(150, ${(i - 3) * 30})`
-            }
+          } else if (i + 1 >= 3 && i + 1 <= 6) {
+            return `translate(150, ${(i - 3) * 30})`;
+          }
           return `translate(300, ${(i - 6) * 30})`;
         });
 
@@ -126,6 +126,12 @@ function drawChart() {
         .attr('y', 9.5)
         .attr('dy', '0.32em')
         .text(d => settings.keys.filter(obj => obj.short === d)[0].long);
+
+      // Set description
+      const description = d3.select('#description');
+      description.node().innerHTML = settings.category.filter(
+        obj => obj.short === currentCategory
+      )[0].description;
     }
   );
 }

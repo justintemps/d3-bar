@@ -19,7 +19,7 @@ function update(currentCategory) {
     const x1 = d3.scaleBand().padding(0.05);
     const y = d3.scaleLinear().rangeRound([height, 0]);
     const z = d3.scaleOrdinal().range(colors);
-    const t = d3.transition().duration(1000);
+    // const t = d3.transition().duration(1000);
 
     x0.domain(currentData.map(obj => obj.country));
     x1.domain(keys).rangeRound([0, x0.bandwidth()]);
@@ -55,7 +55,7 @@ function update(currentCategory) {
     bars = enterBars
       .merge(bars)
       .attr('x', d => x1(d.key))
-      .transition(t)
+      // .transition(t)
       .attr('y', d => y(d.value))
       .attr('width', x1.bandwidth())
       .attr('height', d => height - y(d.value))
@@ -67,12 +67,16 @@ function update(currentCategory) {
     // Update Y-Axis
     svg.select('.y-axis').call(d3.axisLeft(y).ticks(null, 's'));
 
+    // Update chart title
     svg
       .select('.title')
       .text(
         () =>
           settings.category.filter(obj => obj.short === currentCategory)[0].long
       );
+
+    const description = d3.select('#description');
+    description.node().innerHTML = settings.category.filter(obj => obj.short === currentCategory)[0].description;
   });
 }
 
