@@ -5176,10 +5176,7 @@ function update(currentCategory) {
 
     var enterBars = bars.enter().append('rect').attr('width', x1.bandwidth());
 
-    bars = enterBars.merge(bars)
-    // .transition()
-    // .duration(1000)
-    .attr('x', function (d) {
+    bars = enterBars.merge(bars).transition().duration(1000).attr('x', function (d) {
       return x1(d.key);
     }).attr('y', function (d) {
       return y(d.value);
@@ -9657,7 +9654,7 @@ function normalize(d, i, columns) {
     bottom: 80,
     left: 40
   },
-  colors: ['#98abc5', '#8a89a6', '#7b6888', '#6b486b', '#a05d56', '#d0743c', '#ff8c00']
+  colors: ["#6baed6", "#3182bd", "#08519c", "#74c476", "#31a354", "#006d2c", "#9e9ac8", "#756bb1", "#54278f"]
 });
 
 /***/ }),
@@ -9713,8 +9710,8 @@ module.exports = __webpack_require__(178);
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_styles_app_css__ = __webpack_require__(179);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_styles_app_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__src_styles_app_css__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_styles_app_scss__ = __webpack_require__(179);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_styles_app_scss___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__src_styles_app_scss__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__src_js_update__ = __webpack_require__(91);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__src_js_menu__ = __webpack_require__(176);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__src_js_bar_chart__ = __webpack_require__(470);
@@ -22886,8 +22883,8 @@ function drawChart() {
     // Y-Axis
     g.append('g').attr('class', 'y-axis').call(__WEBPACK_IMPORTED_MODULE_0_d3__["b" /* axisLeft */](y).ticks(null, 's')).append('text').attr('x', 2).attr('y', y(y.ticks().pop()) + 0.5).attr('dy', '0.32em').attr('fill', '#000').attr('font-weight', 'bold').attr('text-anchor', 'start');
 
-    var legend = g.append('g').attr('font-family', 'sans-serif').style('font-size,', 8).attr('text-anchor', 'end').selectAll('g').data(keys.slice().reverse()).enter().append('g').attr('transform', function (d, i) {
-      return 'translate(0, ' + i * 20 + ')';
+    var legend = g.append('g').attr('font-family', 'sans-serif').style('font-size,', 8).attr('text-anchor', 'end').attr('transform', 'translate(-800, ' + (height - 50) + ')').selectAll('g').data(keys.slice().reverse()).enter().append('g').attr('transform', function (d, i) {
+      return 'translate(' + i * 100 + ', 100)';
     });
 
     legend.append('rect').attr('x', width - 19).attr('width', 19).attr('height', 19).attr('fill', z);

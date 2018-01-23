@@ -55,8 +55,8 @@ function update(currentCategory) {
 
     bars = enterBars
       .merge(bars)
-      // .transition()
-      // .duration(1000)
+      .transition()
+      .duration(1000)
       .attr('x', d => x1(d.key))
       .attr('y', d => y(d.value))
       .attr('width', x1.bandwidth())

@@ -79,29 +79,33 @@ function drawChart() {
         .attr('dy', '0.32em')
         .attr('fill', '#000')
         .attr('font-weight', 'bold')
-        .attr('text-anchor', 'start')
+        .attr('text-anchor', 'start');
 
-      const legend = g.append('g')
+      const legend = g
+        .append('g')
         .attr('font-family', 'sans-serif')
         .style('font-size,', 8)
         .attr('text-anchor', 'end')
+        .attr('transform', `translate(-800, ${height-50})`)
         .selectAll('g')
-          .data(keys.slice().reverse())
-          .enter().append('g')
-          .attr('transform', (d,i) => `translate(0, ${i*20})` );
+        .data(keys.slice().reverse())
+        .enter()
+        .append('g')
+        .attr('transform', (d, i) => `translate(${i * 100}, 100)`);
 
-      legend.append('rect')
+      legend
+        .append('rect')
         .attr('x', width - 19)
         .attr('width', 19)
         .attr('height', 19)
         .attr('fill', z);
 
-      legend.append('text')
+      legend
+        .append('text')
         .attr('x', width - 24)
         .attr('y', 9.5)
         .attr('dy', '0.32em')
         .text(d => d);
-
     }
   );
 }
