@@ -5,7 +5,8 @@ import filter from './filter';
 import setMenu from './menu';
 
 const { csv, category, margin, colors } = settings;
-const currentCategory = category.agriculture;
+const currentCategory = category[0].short;
+const currentTitle = category[0].long;
 const svg = d3.select('svg');
 const width = +svg.attr('width') - margin.left - margin.right;
 const height = +svg.attr('height') - margin.top - margin.bottom;
@@ -81,12 +82,20 @@ function drawChart() {
         .attr('font-weight', 'bold')
         .attr('text-anchor', 'start');
 
+      const title = g
+        .append('text')
+        .attr('x', width / 2)
+        .attr('y', 0)
+        .attr('class', 'title')
+        .style('text-anchor', 'middle')
+        .text(currentTitle);
+
       const legend = g
         .append('g')
         .attr('font-family', 'sans-serif')
         .style('font-size,', 8)
         .attr('text-anchor', 'end')
-        .attr('transform', `translate(-800, ${height-50})`)
+        .attr('transform', `translate(-800, ${height - 50})`)
         .selectAll('g')
         .data(keys.slice().reverse())
         .enter()

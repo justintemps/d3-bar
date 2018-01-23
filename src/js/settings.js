@@ -1,27 +1,62 @@
 export default {
   csv: 'https://raw.githubusercontent.com/justintemps/d3-bar/master/data.csv',
-  category: {
-    agriculture: 'Sector: agriculture',
-    highSkill: 'Occupation: High-skill',
-    mediumSkill: 'Occupation: Medium-skill',
-    lowSkill: 'Occupation: Low-skill',
-    mismatch: 'Mismatch: over-qualification'
-  },
   margin: {
     top: 20,
     right: 20,
     bottom: 80,
-    left: 40
+    left: 25
   },
   colors: [
-    "#6baed6",
-    "#3182bd",
-    "#08519c",
-    "#74c476",
-    "#31a354",
-    "#006d2c",
-    "#9e9ac8",
-    "#756bb1",
-    "#54278f"
+    '#6baed6',
+    '#3182bd',
+    '#08519c',
+    '#74c476',
+    '#31a354',
+    '#006d2c',
+    '#9e9ac8',
+    '#756bb1',
+    '#54278f'
+  ],
+  category: [
+    {
+      short: 'Sector: agriculture',
+      long:
+        'Share of employment in agriculture, by origin and sex (%, most recent period)'
+    },
+    {
+      short: 'Sector: industry',
+      long:
+        'Share of employment in industry, by origin and sex (%, most recent period)'
+    },
+    {
+      short: 'Sector: services',
+      long:
+        'Share of employment in services, by origin and sex (%, most recent period)'
+    },
+    {
+      short: 'Occupation: High-skill',
+      long:
+        'Share of employment in high-skill occupations, by origin and sex (%, most recent time period)'
+    },
+    {
+      short: 'Occupation: Medium-skill',
+      long:
+        'Share of employment in medium-skill occupations, by origin and sex (%, most recent time period)'
+    },
+    {
+      short: 'Occupation: Low-skill',
+      long:
+        'Share of employment in low-skill occupations, by origin and sex (%, most recent time period)'
+    },
+    {
+      short: 'Skills mismatch: over-qualification',
+      long:
+        'Rates of over-qualification, by origin and sex (%, most recent time period)'
+    },
+    {
+      short: 'Skills mismatch: under-qualification',
+      long:
+        'Rates of under-qualification, by origin and sex (%, most recent time period)'
+    }
   ]
 };

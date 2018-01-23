@@ -26,9 +26,7 @@ function update(currentCategory) {
 
     const plotarea = d3.select('.plotarea');
 
-    let countries = plotarea
-      .selectAll('g')
-      .data(currentData, d => d.country)
+    let countries = plotarea.selectAll('g').data(currentData, d => d.country);
 
     countries.exit().remove();
 
@@ -68,6 +66,13 @@ function update(currentCategory) {
 
     // Update Y-Axis
     svg.select('.y-axis').call(d3.axisLeft(y).ticks(null, 's'));
+
+    svg
+      .select('.title')
+      .text(
+        () =>
+          settings.category.filter(obj => obj.short === currentCategory)[0].long
+      );
   });
 }
 
