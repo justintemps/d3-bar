@@ -16,7 +16,7 @@ const g = svg
 const x0 = d3
   .scaleBand()
   .rangeRound([0, width])
-  .paddingInner(0.1);
+  .paddingInner(0.2);
 const x1 = d3.scaleBand().padding(0.05);
 const y = d3.scaleLinear().rangeRound([height, 0]);
 const z = d3.scaleOrdinal().range(colors);
@@ -82,10 +82,11 @@ function drawChart() {
         .attr('font-weight', 'bold')
         .attr('text-anchor', 'start');
 
-      const title = g
+      // Title
+      svg
         .append('text')
         .attr('x', width / 2)
-        .attr('y', 0)
+        .attr('y', 25)
         .attr('class', 'title')
         .style('text-anchor', 'middle')
         .text(currentTitle);
@@ -95,12 +96,19 @@ function drawChart() {
         .attr('font-family', 'sans-serif')
         .style('font-size,', 8)
         .attr('text-anchor', 'end')
-        .attr('transform', `translate(-800, ${height - 50})`)
+        .attr('transform', `translate(${-width + margin.left}, ${height - 50})`)
         .selectAll('g')
-        .data(keys.slice().reverse())
+        .data(keys.slice())
         .enter()
         .append('g')
-        .attr('transform', (d, i) => `translate(${i * 100}, 100)`);
+        .attr('transform', (d, i) => {
+          const legendWidth = width - margin.right - margin.left;
+          const itemWidth = legendWidth / (keys.length / 2);
+          if (i < keys.length / 2) {
+            return `translate(${i * itemWidth + margin.left + margin.right}, 90)`;
+          }
+          return `translate(${(i - keys.length / 2) * itemWidth + margin.left + margin.right}, 120)`;
+        });
 
       legend
         .append('rect')
@@ -114,7 +122,7 @@ function drawChart() {
         .attr('x', width - 24)
         .attr('y', 9.5)
         .attr('dy', '0.32em')
-        .text(d => d);
+        .text(d => settings.keys.filter(obj => obj.short === d)[0].long);
     }
   );
 }

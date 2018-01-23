@@ -1,9 +1,9 @@
 export default {
   csv: 'https://raw.githubusercontent.com/justintemps/d3-bar/master/data.csv',
   margin: {
-    top: 20,
+    top: 50,
     right: 20,
-    bottom: 80,
+    bottom: 100,
     left: 25
   },
   colors: [
@@ -57,6 +57,44 @@ export default {
       short: 'Skills mismatch: under-qualification',
       long:
         'Rates of under-qualification, by origin and sex (%, most recent time period)'
+    }
+  ],
+  keys: [
+    {
+      short: 'male',
+      long: 'All men',
+    },
+    {
+      short: 'female',
+      long: 'All women'
+    },
+    {
+      short: 'total',
+      long: 'Total'
+    },
+    {
+      short: 'native-male',
+      long: 'Native-born men'
+    },
+    {
+      short: 'native-female',
+      long: 'Native-born women'
+    },
+    {
+      short: 'native-total',
+      long: 'Native-born total'
+    },
+    {
+      short: 'foreign-male',
+      long: 'Foreign-born men'
+    },
+    {
+      short: 'foreign-female',
+      long: 'Foreign-born women'
+    },
+    {
+      short: 'foreign-total',
+      long: 'Foreign-born total'
     }
   ]
 };

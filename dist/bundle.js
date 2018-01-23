@@ -5191,6 +5191,12 @@ function update(currentCategory) {
 
     // Update Y-Axis
     svg.select('.y-axis').call(__WEBPACK_IMPORTED_MODULE_0_d3__["b" /* axisLeft */](y).ticks(null, 's'));
+
+    svg.select('.title').text(function () {
+      return __WEBPACK_IMPORTED_MODULE_2__settings__["a" /* default */].category.filter(function (obj) {
+        return obj.short === currentCategory;
+      })[0].long;
+    });
   });
 }
 
@@ -9641,20 +9647,66 @@ function normalize(d, i, columns) {
 "use strict";
 /* harmony default export */ __webpack_exports__["a"] = ({
   csv: 'https://raw.githubusercontent.com/justintemps/d3-bar/master/data.csv',
-  category: {
-    agriculture: 'Sector: agriculture',
-    highSkill: 'Occupation: High-skill',
-    mediumSkill: 'Occupation: Medium-skill',
-    lowSkill: 'Occupation: Low-skill',
-    mismatch: 'Mismatch: over-qualification'
-  },
   margin: {
-    top: 20,
+    top: 50,
     right: 20,
-    bottom: 80,
-    left: 40
+    bottom: 100,
+    left: 25
   },
-  colors: ["#6baed6", "#3182bd", "#08519c", "#74c476", "#31a354", "#006d2c", "#9e9ac8", "#756bb1", "#54278f"]
+  colors: ['#6baed6', '#3182bd', '#08519c', '#74c476', '#31a354', '#006d2c', '#9e9ac8', '#756bb1', '#54278f'],
+  category: [{
+    short: 'Sector: agriculture',
+    long: 'Share of employment in agriculture, by origin and sex (%, most recent period)'
+  }, {
+    short: 'Sector: industry',
+    long: 'Share of employment in industry, by origin and sex (%, most recent period)'
+  }, {
+    short: 'Sector: services',
+    long: 'Share of employment in services, by origin and sex (%, most recent period)'
+  }, {
+    short: 'Occupation: High-skill',
+    long: 'Share of employment in high-skill occupations, by origin and sex (%, most recent time period)'
+  }, {
+    short: 'Occupation: Medium-skill',
+    long: 'Share of employment in medium-skill occupations, by origin and sex (%, most recent time period)'
+  }, {
+    short: 'Occupation: Low-skill',
+    long: 'Share of employment in low-skill occupations, by origin and sex (%, most recent time period)'
+  }, {
+    short: 'Skills mismatch: over-qualification',
+    long: 'Rates of over-qualification, by origin and sex (%, most recent time period)'
+  }, {
+    short: 'Skills mismatch: under-qualification',
+    long: 'Rates of under-qualification, by origin and sex (%, most recent time period)'
+  }],
+  keys: [{
+    short: 'male',
+    long: 'All men'
+  }, {
+    short: 'female',
+    long: 'All women'
+  }, {
+    short: 'total',
+    long: 'Total'
+  }, {
+    short: 'native-male',
+    long: 'Native-born men'
+  }, {
+    short: 'native-female',
+    long: 'Native-born women'
+  }, {
+    short: 'native-total',
+    long: 'Native-born total'
+  }, {
+    short: 'foreign-male',
+    long: 'Foreign-born men'
+  }, {
+    short: 'foreign-female',
+    long: 'Foreign-born women'
+  }, {
+    short: 'foreign-total',
+    long: 'Foreign-born total'
+  }]
 });
 
 /***/ }),
@@ -22825,12 +22877,13 @@ var csv = __WEBPACK_IMPORTED_MODULE_1__settings__["a" /* default */].csv,
     margin = __WEBPACK_IMPORTED_MODULE_1__settings__["a" /* default */].margin,
     colors = __WEBPACK_IMPORTED_MODULE_1__settings__["a" /* default */].colors;
 
-var currentCategory = category.agriculture;
+var currentCategory = category[0].short;
+var currentTitle = category[0].long;
 var svg = __WEBPACK_IMPORTED_MODULE_0_d3__["h" /* select */]('svg');
 var width = +svg.attr('width') - margin.left - margin.right;
 var height = +svg.attr('height') - margin.top - margin.bottom;
 var g = svg.append('g').attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
-var x0 = __WEBPACK_IMPORTED_MODULE_0_d3__["e" /* scaleBand */]().rangeRound([0, width]).paddingInner(0.1);
+var x0 = __WEBPACK_IMPORTED_MODULE_0_d3__["e" /* scaleBand */]().rangeRound([0, width]).paddingInner(0.2);
 var x1 = __WEBPACK_IMPORTED_MODULE_0_d3__["e" /* scaleBand */]().padding(0.05);
 var y = __WEBPACK_IMPORTED_MODULE_0_d3__["f" /* scaleLinear */]().rangeRound([height, 0]);
 var z = __WEBPACK_IMPORTED_MODULE_0_d3__["g" /* scaleOrdinal */]().range(colors);
@@ -22883,14 +22936,24 @@ function drawChart() {
     // Y-Axis
     g.append('g').attr('class', 'y-axis').call(__WEBPACK_IMPORTED_MODULE_0_d3__["b" /* axisLeft */](y).ticks(null, 's')).append('text').attr('x', 2).attr('y', y(y.ticks().pop()) + 0.5).attr('dy', '0.32em').attr('fill', '#000').attr('font-weight', 'bold').attr('text-anchor', 'start');
 
-    var legend = g.append('g').attr('font-family', 'sans-serif').style('font-size,', 8).attr('text-anchor', 'end').attr('transform', 'translate(-800, ' + (height - 50) + ')').selectAll('g').data(keys.slice().reverse()).enter().append('g').attr('transform', function (d, i) {
-      return 'translate(' + i * 100 + ', 100)';
+    // Title
+    svg.append('text').attr('x', width / 2).attr('y', 25).attr('class', 'title').style('text-anchor', 'middle').text(currentTitle);
+
+    var legend = g.append('g').attr('font-family', 'sans-serif').style('font-size,', 8).attr('text-anchor', 'end').attr('transform', 'translate(' + (-width + margin.left) + ', ' + (height - 50) + ')').selectAll('g').data(keys.slice()).enter().append('g').attr('transform', function (d, i) {
+      var legendWidth = width - margin.right - margin.left;
+      var itemWidth = legendWidth / (keys.length / 2);
+      if (i < keys.length / 2) {
+        return 'translate(' + (i * itemWidth + margin.left + margin.right) + ', 90)';
+      }
+      return 'translate(' + ((i - keys.length / 2) * itemWidth + margin.left + margin.right) + ', 120)';
     });
 
     legend.append('rect').attr('x', width - 19).attr('width', 19).attr('height', 19).attr('fill', z);
 
     legend.append('text').attr('x', width - 24).attr('y', 9.5).attr('dy', '0.32em').text(function (d) {
-      return d;
+      return __WEBPACK_IMPORTED_MODULE_1__settings__["a" /* default */].keys.filter(function (obj) {
+        return obj.short === d;
+      })[0].long;
     });
   });
 }
