@@ -5151,8 +5151,9 @@ function update(currentCategory) {
       });
     })]);
 
-    // Update groups
-    var countries = __WEBPACK_IMPORTED_MODULE_0_d3__["h" /* select */]('.plotarea').selectAll('.country').data(currentData, function (d) {
+    var plotarea = __WEBPACK_IMPORTED_MODULE_0_d3__["h" /* select */]('.plotarea');
+
+    var countries = plotarea.selectAll('g').data(currentData, function (d) {
       return d.country;
     });
 
@@ -5162,7 +5163,7 @@ function update(currentCategory) {
 
     countries = enter.merge(countries).attr('transform', function (d) {
       return 'translate(' + x0(d.country) + ',0)';
-    }); // estlint-disable-line
+    }); // estlint-disable-line */
 
     // Update bars
     var bars = countries.selectAll('rect').data(function (d) {
@@ -5175,7 +5176,10 @@ function update(currentCategory) {
 
     var enterBars = bars.enter().append('rect').attr('width', x1.bandwidth());
 
-    bars = enterBars.merge(bars).attr('x', function (d) {
+    bars = enterBars.merge(bars)
+    // .transition()
+    // .duration(1000)
+    .attr('x', function (d) {
       return x1(d.key);
     }).attr('y', function (d) {
       return y(d.value);
