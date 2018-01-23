@@ -96,18 +96,21 @@ function drawChart() {
         .attr('font-family', 'sans-serif')
         .style('font-size,', 8)
         .attr('text-anchor', 'end')
-        .attr('transform', `translate(${-width + margin.left + margin.right}, ${height - 50})`)
+        .attr(
+          'transform',
+          `translate(${(-width + margin.left) / 1.55}, ${height + 50})`
+        )
         .selectAll('g')
-        .data(keys.slice())
+        .data(keys)
         .enter()
         .append('g')
         .attr('transform', (d, i) => {
-          const legendWidth = width - margin.right - margin.left;
-          const itemWidth = legendWidth / (keys.length / 2);
-          if (i < keys.length / 2) {
-            return `translate(${i * itemWidth + margin.left + margin.right}, 90)`;
-          }
-          return `translate(${(i - keys.length / 2) * itemWidth + margin.left + margin.right}, 120)`;
+          if (i + 1 <= 3) {
+            return `translate(0, ${i * 30})`;
+          } else if (i + 1 >=3 && i + 1 <= 6) {
+              return `translate(150, ${(i - 3) * 30})`
+            }
+          return `translate(300, ${(i - 6) * 30})`;
         });
 
       legend

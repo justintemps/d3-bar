@@ -9650,7 +9650,7 @@ function normalize(d, i, columns) {
   margin: {
     top: 50,
     right: 20,
-    bottom: 100,
+    bottom: 150,
     left: 25
   },
   colors: ['#6baed6', '#3182bd', '#08519c', '#74c476', '#31a354', '#006d2c', '#9e9ac8', '#756bb1', '#54278f'],
@@ -22939,13 +22939,13 @@ function drawChart() {
     // Title
     svg.append('text').attr('x', width / 2).attr('y', 25).attr('class', 'title').style('text-anchor', 'middle').text(currentTitle);
 
-    var legend = g.append('g').attr('font-family', 'sans-serif').style('font-size,', 8).attr('text-anchor', 'end').attr('transform', 'translate(' + (-width + margin.left) + ', ' + (height - 50) + ')').selectAll('g').data(keys.slice()).enter().append('g').attr('transform', function (d, i) {
-      var legendWidth = width - margin.right - margin.left;
-      var itemWidth = legendWidth / (keys.length / 2);
-      if (i < keys.length / 2) {
-        return 'translate(' + (i * itemWidth + margin.left + margin.right) + ', 90)';
+    var legend = g.append('g').attr('font-family', 'sans-serif').style('font-size,', 8).attr('text-anchor', 'end').attr('transform', 'translate(' + (-width + margin.left) / 1.55 + ', ' + (height + 50) + ')').selectAll('g').data(keys).enter().append('g').attr('transform', function (d, i) {
+      if (i + 1 <= 3) {
+        return 'translate(0, ' + i * 30 + ')';
+      } else if (i + 1 >= 3 && i + 1 <= 6) {
+        return 'translate(150, ' + (i - 3) * 30 + ')';
       }
-      return 'translate(' + ((i - keys.length / 2) * itemWidth + margin.left + margin.right) + ', 120)';
+      return 'translate(300, ' + (i - 6) * 30 + ')';
     });
 
     legend.append('rect').attr('x', width - 19).attr('width', 19).attr('height', 19).attr('fill', z);
