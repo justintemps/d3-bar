@@ -15,6 +15,10 @@ body {
 .select-wrapper {
   width: 100%; }
 
+select {
+  position: absolute;
+  top: 50px; }
+
 text {
   font-size: 12px; }
 

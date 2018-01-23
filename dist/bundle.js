@@ -9657,7 +9657,7 @@ function normalize(d, i, columns) {
 /* harmony default export */ __webpack_exports__["a"] = ({
   csv: 'data.csv',
   margin: {
-    top: 50,
+    top: 100,
     right: 20,
     bottom: 150,
     left: 25

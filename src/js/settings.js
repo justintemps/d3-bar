@@ -1,7 +1,7 @@
 export default {
   csv: 'data.csv',
   margin: {
-    top: 50,
+    top: 100,
     right: 20,
     bottom: 150,
     left: 25
