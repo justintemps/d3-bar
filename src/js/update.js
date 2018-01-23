@@ -24,11 +24,11 @@ function update(currentCategory) {
     x1.domain(keys).rangeRound([0, x0.bandwidth()]);
     y.domain([0, d3.max(currentData, d => d3.max(keys, key => d[key]))]);
 
-    // Update groups
-    let countries = d3
-      .select('.plotarea')
-      .selectAll('.country')
-      .data(currentData, d => d.country);
+    const plotarea = d3.select('.plotarea');
+
+    let countries = plotarea
+      .selectAll('g')
+      .data(currentData, d => d.country)
 
     countries.exit().remove();
 
@@ -39,7 +39,7 @@ function update(currentCategory) {
 
     countries = enter
       .merge(countries)
-      .attr('transform', d => `translate(${x0(d.country)},0)`); // estlint-disable-line
+      .attr('transform', d => `translate(${x0(d.country)},0)`); // estlint-disable-line */
 
     // Update bars
     let bars = countries
@@ -55,6 +55,8 @@ function update(currentCategory) {
 
     bars = enterBars
       .merge(bars)
+      // .transition()
+      // .duration(1000)
       .attr('x', d => x1(d.key))
       .attr('y', d => y(d.value))
       .attr('width', x1.bandwidth())
@@ -62,12 +64,10 @@ function update(currentCategory) {
       .attr('fill', d => z(d.key));
 
     // Update X-Axis
-    svg.select('.x-axis')
-      .call(d3.axisBottom(x0));
+    svg.select('.x-axis').call(d3.axisBottom(x0));
 
     // Update Y-Axis
-    svg.select('.y-axis')
-      .call(d3.axisLeft(y).ticks(null, 's'))
+    svg.select('.y-axis').call(d3.axisLeft(y).ticks(null, 's'));
   });
 }
 
