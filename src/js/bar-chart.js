@@ -96,7 +96,7 @@ function drawChart() {
         .attr('font-family', 'sans-serif')
         .style('font-size,', 8)
         .attr('text-anchor', 'end')
-        .attr('transform', `translate(${-width + margin.left}, ${height - 50})`)
+        .attr('transform', `translate(${-width + margin.left + margin.right}, ${height - 50})`)
         .selectAll('g')
         .data(keys.slice())
         .enter()
