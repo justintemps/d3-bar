@@ -15,10 +15,11 @@ function update(currentCategory) {
     const x0 = d3
       .scaleBand()
       .rangeRound([0, width])
-      .paddingInner(0.1);
+      .paddingInner(0.2);
     const x1 = d3.scaleBand().padding(0.05);
     const y = d3.scaleLinear().rangeRound([height, 0]);
     const z = d3.scaleOrdinal().range(colors);
+    const t = d3.transition().duration(1000);
 
     x0.domain(currentData.map(obj => obj.country));
     x1.domain(keys).rangeRound([0, x0.bandwidth()]);
@@ -53,9 +54,8 @@ function update(currentCategory) {
 
     bars = enterBars
       .merge(bars)
-      .transition()
-      .duration(1000)
       .attr('x', d => x1(d.key))
+      .transition(t)
       .attr('y', d => y(d.value))
       .attr('width', x1.bandwidth())
       .attr('height', d => height - y(d.value))
