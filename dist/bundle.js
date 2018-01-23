@@ -899,8 +899,8 @@ var durationWeek = 6048e5;
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = Transition;
-/* harmony export (immutable) */ __webpack_exports__["b"] = transition;
-/* harmony export (immutable) */ __webpack_exports__["c"] = newId;
+/* unused harmony export default */
+/* harmony export (immutable) */ __webpack_exports__["b"] = newId;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3_selection__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__attr__ = __webpack_require__(257);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__attrTween__ = __webpack_require__(258);
@@ -2671,7 +2671,7 @@ Cardinal.prototype = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_27_d3_timer__ = __webpack_require__(35);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_28_d3_transition__ = __webpack_require__(63);
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "i", function() { return __WEBPACK_IMPORTED_MODULE_28_d3_transition__["b"]; });
+/* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_29_d3_voronoi__ = __webpack_require__(460);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_30_d3_zoom__ = __webpack_require__(465);
@@ -3402,7 +3402,7 @@ function basis(t1, v0, v1, v2, v3) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_selection_index__ = __webpack_require__(252);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__src_transition_index__ = __webpack_require__(10);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_1__src_transition_index__["b"]; });
+/* unused harmony reexport transition */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__src_active__ = __webpack_require__(283);
 /* unused harmony reexport active */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__src_interrupt__ = __webpack_require__(119);
@@ -5140,7 +5140,7 @@ function update(currentCategory) {
     var x1 = __WEBPACK_IMPORTED_MODULE_0_d3__["e" /* scaleBand */]().padding(0.05);
     var y = __WEBPACK_IMPORTED_MODULE_0_d3__["f" /* scaleLinear */]().rangeRound([height, 0]);
     var z = __WEBPACK_IMPORTED_MODULE_0_d3__["g" /* scaleOrdinal */]().range(colors);
-    var t = __WEBPACK_IMPORTED_MODULE_0_d3__["i" /* transition */]().duration(1000);
+    // const t = d3.transition().duration(1000);
 
     x0.domain(currentData.map(function (obj) {
       return obj.country;
@@ -5179,7 +5179,9 @@ function update(currentCategory) {
 
     bars = enterBars.merge(bars).attr('x', function (d) {
       return x1(d.key);
-    }).transition(t).attr('y', function (d) {
+    })
+    // .transition(t)
+    .attr('y', function (d) {
       return y(d.value);
     }).attr('width', x1.bandwidth()).attr('height', function (d) {
       return height - y(d.value);
@@ -5193,11 +5195,17 @@ function update(currentCategory) {
     // Update Y-Axis
     svg.select('.y-axis').call(__WEBPACK_IMPORTED_MODULE_0_d3__["b" /* axisLeft */](y).ticks(null, 's'));
 
+    // Update chart title
     svg.select('.title').text(function () {
       return __WEBPACK_IMPORTED_MODULE_2__settings__["a" /* default */].category.filter(function (obj) {
         return obj.short === currentCategory;
       })[0].long;
     });
+
+    var description = __WEBPACK_IMPORTED_MODULE_0_d3__["h" /* select */]('#description');
+    description.node().innerHTML = __WEBPACK_IMPORTED_MODULE_2__settings__["a" /* default */].category.filter(function (obj) {
+      return obj.short === currentCategory;
+    })[0].description;
   });
 }
 
@@ -9657,28 +9665,36 @@ function normalize(d, i, columns) {
   colors: ['#6baed6', '#3182bd', '#08519c', '#74c476', '#31a354', '#006d2c', '#9e9ac8', '#756bb1', '#54278f'],
   category: [{
     short: 'Sector: agriculture',
-    long: 'Share of employment in agriculture, by origin and sex (%, most recent period)'
+    long: 'Share of employment in agriculture, by origin and sex (%, most recent period)',
+    description: 'Agriculture has become less important for both native-born workers and foreign-born workers in all ECLM partner countries except Côte d’Ivoire and Nepal. Nevertheless, the sector still employs the largest numbers of workers in most partner countries.'
   }, {
     short: 'Sector: industry',
-    long: 'Share of employment in industry, by origin and sex (%, most recent period)'
+    long: 'Share of employment in industry, by origin and sex (%, most recent period)',
+    description: 'Foreign-born workers have a higher share of employment in industry when compared to native-born workers. This share has risen over time in several countries (up to 24 percentage points for foreign-born workers in Thailand).'
   }, {
     short: 'Sector: services',
-    long: 'Share of employment in services, by origin and sex (%, most recent period)'
+    long: 'Share of employment in services, by origin and sex (%, most recent period)',
+    description: 'Employment in services increased for native-born workers in all ECLM partner countries and for foreign-born workers in all except Argentina and Côte d’Ivoire. In four countries – the Dominican Republic, Ghana, Rwanda and South Africa –, employment growth in services was considerably greater for foreign-born workers than for native-born workers.'
   }, {
     short: 'Occupation: High-skill',
-    long: 'Share of employment in high-skill occupations, by origin and sex (%, most recent time period)'
+    long: 'Share of employment in high-skill occupations, by origin and sex (%, most recent time period)',
+    description: 'Globally, the share of high-skill occupations tends to increase, driven by several factors including globalisation, technological change and policy choices. ECLM partner countries mostly follow the same pattern, with the exceptions of Kyrgyzstan and Thailand.'
   }, {
     short: 'Occupation: Medium-skill',
-    long: 'Share of employment in medium-skill occupations, by origin and sex (%, most recent time period)'
+    long: 'Share of employment in medium-skill occupations, by origin and sex (%, most recent time period)',
+    description: 'The large majority of both native- and foreign-born workers in most ECLM partner countries are working in medium-skill occupations. The exception is Kyrgyzstan, where only around a third of the workforce, both native- and foreign-born, is in medium-skill occupations.'
   }, {
     short: 'Occupation: Low-skill',
-    long: 'Share of employment in low-skill occupations, by origin and sex (%, most recent time period)'
+    long: 'Share of employment in low-skill occupations, by origin and sex (%, most recent time period)',
+    description: 'The native-born occupational distribution is usually quite different from the foreign-born. In particular, in comparison with the native-born, foreign-born workers are overrepresented in low-skill occupations in most of the ECLM partner countries. In the absence of strong unions, these workers often have limited bargaining power and are at risk of exploitation.  '
   }, {
-    short: 'Skills mismatch: over-qualification',
-    long: 'Rates of over-qualification, by origin and sex (%, most recent time period)'
+    short: 'Mismatch: over-qualification',
+    long: 'Rates of over-qualification, by origin and sex (%, most recent time period)',
+    description: 'Over-qualification means that workers have attained educational levels that are higher than those required for their jobs. On average, the levels of over-qualification are higher for women, while levels of over-qualification are often higher for immigrant workers in medium skill occupations.'
   }, {
-    short: 'Skills mismatch: under-qualification',
-    long: 'Rates of under-qualification, by origin and sex (%, most recent time period)'
+    short: 'Mismatch: under-qualification',
+    long: 'Rates of under-qualification, by origin and sex (%, most recent time period)',
+    description: 'When comparing native- to foreign-born workers, the rate of under-qualification is higher for the latter in seven of the partner countries. In part this may reflect low quality work performed by foreign-born workers.'
   }],
   keys: [{
     short: 'male',
@@ -12913,7 +12929,7 @@ function inherit(node, id) {
   if (name instanceof __WEBPACK_IMPORTED_MODULE_0__transition_index__["a" /* Transition */]) {
     id = name._id, name = name._name;
   } else {
-    id = Object(__WEBPACK_IMPORTED_MODULE_0__transition_index__["c" /* newId */])(), (timing = defaultTiming).time = Object(__WEBPACK_IMPORTED_MODULE_3_d3_timer__["a" /* now */])(), name = name == null ? null : name + "";
+    id = Object(__WEBPACK_IMPORTED_MODULE_0__transition_index__["b" /* newId */])(), (timing = defaultTiming).time = Object(__WEBPACK_IMPORTED_MODULE_3_d3_timer__["a" /* now */])(), name = name == null ? null : name + "";
   }
 
   for (var groups = this._groups, m = groups.length, j = 0; j < m; ++j) {
@@ -13467,7 +13483,7 @@ function textFunction(value) {
 /* harmony default export */ __webpack_exports__["a"] = (function() {
   var name = this._name,
       id0 = this._id,
-      id1 = Object(__WEBPACK_IMPORTED_MODULE_0__index__["c" /* newId */])();
+      id1 = Object(__WEBPACK_IMPORTED_MODULE_0__index__["b" /* newId */])();
 
   for (var groups = this._groups, m = groups.length, j = 0; j < m; ++j) {
     for (var group = groups[j], n = group.length, node, i = 0; i < n; ++i) {
@@ -22965,6 +22981,12 @@ function drawChart() {
         return obj.short === d;
       })[0].long;
     });
+
+    // Set description
+    var description = __WEBPACK_IMPORTED_MODULE_0_d3__["h" /* select */]('#description');
+    description.node().innerHTML = __WEBPACK_IMPORTED_MODULE_1__settings__["a" /* default */].category.filter(function (obj) {
+      return obj.short === currentCategory;
+    })[0].description;
   });
 }
 
