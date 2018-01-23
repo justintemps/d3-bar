@@ -1,5 +1,5 @@
 export default {
-  csv: 'https://raw.githubusercontent.com/justintemps/d3-bar/master/data.csv',
+  csv: 'data.csv',
   margin: {
     top: 50,
     right: 20,

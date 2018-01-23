@@ -2,6 +2,16 @@ const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const ExtractCSS = new ExtractTextPlugin({
+  filename: 'bundle.css',
+  allChunks: true
+});
+
+const ExtractCSV = new ExtractTextPlugin({
+  filename: 'data.csv',
+  allChunks: true
+})
+
 module.exports = {
   context: __dirname,
   entry: ['./app.js'],
@@ -23,10 +33,8 @@ module.exports = {
     contentBase: './dist'
   },
   plugins: [
-    new ExtractTextPlugin({
-      filename: 'bundle.css',
-      allChunks: true
-    }),
+    ExtractCSS,
+    ExtractCSV,
     new HtmlWebpackPlugin({
       template: './index.ejs',
       inject: 'body'
@@ -50,17 +58,17 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract({
-          use: 'css-loader?importLoaders=1'
+        loader: ExtractCSS.extract({
+          use: 'css-loader'
         })
       },
       {
         test: /\.(sass|scss)$/,
-        loader: ExtractTextPlugin.extract(['css-loader', 'sass-loader'])
+        loader: ExtractCSS.extract(['css-loader', 'sass-loader'])
       },
       {
         test: /\.csv$/,
-        loader: 'raw-loader'
+        loader: ExtractCSV.extract(['raw-loader'])
       }
     ]
   }
