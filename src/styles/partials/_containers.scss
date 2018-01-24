@@ -1,0 +1,21 @@
+html {
+  font-size: 100%;
+}
+
+body {
+  margin: 0;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+.container {
+  display: block;
+  margin: 0 auto;
+  max-width: $max-chart-width;
+  padding: 0 20px;
+  width: 100%;
+}

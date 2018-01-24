@@ -5187,7 +5187,7 @@ function update(currentCategory) {
       return height - y(d.value);
     }).attr('fill', function (d) {
       return z(d.key);
-    });
+    }).attr('stroke', '#fff');
 
     // Update X-Axis
     svg.select('.x-axis').call(__WEBPACK_IMPORTED_MODULE_0_d3__["a" /* axisBottom */](x0));
@@ -5196,11 +5196,9 @@ function update(currentCategory) {
     svg.select('.y-axis').call(__WEBPACK_IMPORTED_MODULE_0_d3__["b" /* axisLeft */](y).ticks(null, 's'));
 
     // Update chart title
-    svg.select('.title').text(function () {
-      return __WEBPACK_IMPORTED_MODULE_2__settings__["a" /* default */].category.filter(function (obj) {
-        return obj.short === currentCategory;
-      })[0].long;
-    });
+    __WEBPACK_IMPORTED_MODULE_0_d3__["h" /* select */]('.chart-title').node().innerHTML = __WEBPACK_IMPORTED_MODULE_2__settings__["a" /* default */].category.filter(function (obj) {
+      return obj.short === currentCategory;
+    })[0].long;
 
     var description = __WEBPACK_IMPORTED_MODULE_0_d3__["h" /* select */]('#description');
     description.node().innerHTML = __WEBPACK_IMPORTED_MODULE_2__settings__["a" /* default */].category.filter(function (obj) {
@@ -9657,8 +9655,8 @@ function normalize(d, i, columns) {
 /* harmony default export */ __webpack_exports__["a"] = ({
   csv: 'data.csv',
   margin: {
-    top: 100,
-    right: 20,
+    top: 50,
+    right: 0,
     bottom: 150,
     left: 25
   },
@@ -22954,7 +22952,7 @@ function drawChart() {
       return height - y(d.value);
     }).attr('fill', function (d) {
       return z(d.key);
-    });
+    }).attr('stroke', '#fff');
 
     // X-Axis
     g.append('g').attr('class', 'x-axis').attr('transform', 'translate(0,' + height + ')').call(__WEBPACK_IMPORTED_MODULE_0_d3__["a" /* axisBottom */](x0));
@@ -22963,7 +22961,7 @@ function drawChart() {
     g.append('g').attr('class', 'y-axis').call(__WEBPACK_IMPORTED_MODULE_0_d3__["b" /* axisLeft */](y).ticks(null, 's')).append('text').attr('x', 2).attr('y', y(y.ticks().pop()) + 0.5).attr('dy', '0.32em').attr('fill', '#000').attr('font-weight', 'bold').attr('text-anchor', 'start');
 
     // Title
-    svg.append('text').attr('x', width / 2).attr('y', 25).attr('class', 'title').style('text-anchor', 'middle').text(currentTitle);
+    __WEBPACK_IMPORTED_MODULE_0_d3__["h" /* select */]('.chart-title').node().innerHTML = currentTitle;
 
     var legend = g.append('g').attr('font-family', 'sans-serif').style('font-size,', 8).attr('text-anchor', 'end').attr('transform', 'translate(' + (-width + margin.left) / 1.55 + ', ' + (height + 50) + ')').selectAll('g').data(keys).enter().append('g').attr('transform', function (d, i) {
       if (i + 1 <= 3) {

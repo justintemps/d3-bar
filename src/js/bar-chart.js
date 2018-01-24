@@ -60,7 +60,8 @@ function drawChart() {
         .attr('y', d => y(d.value))
         .attr('width', x1.bandwidth())
         .attr('height', d => height - y(d.value))
-        .attr('fill', d => z(d.key));
+        .attr('fill', d => z(d.key))
+        .attr('stroke', '#fff');
 
       // X-Axis
       g
@@ -83,13 +84,7 @@ function drawChart() {
         .attr('text-anchor', 'start');
 
       // Title
-      svg
-        .append('text')
-        .attr('x', width / 2)
-        .attr('y', 25)
-        .attr('class', 'title')
-        .style('text-anchor', 'middle')
-        .text(currentTitle);
+      d3.select('.chart-title').node().innerHTML = currentTitle
 
       const legend = g
         .append('g')

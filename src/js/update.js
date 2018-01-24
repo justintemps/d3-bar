@@ -59,7 +59,8 @@ function update(currentCategory) {
       .attr('y', d => y(d.value))
       .attr('width', x1.bandwidth())
       .attr('height', d => height - y(d.value))
-      .attr('fill', d => z(d.key));
+      .attr('fill', d => z(d.key))
+      .attr('stroke', '#fff');
 
     // Update X-Axis
     svg.select('.x-axis').call(d3.axisBottom(x0));
@@ -68,12 +69,9 @@ function update(currentCategory) {
     svg.select('.y-axis').call(d3.axisLeft(y).ticks(null, 's'));
 
     // Update chart title
-    svg
-      .select('.title')
-      .text(
-        () =>
-          settings.category.filter(obj => obj.short === currentCategory)[0].long
-      );
+    d3
+      .select('.chart-title').node().innerHTML = settings.category.filter(obj => obj.short === currentCategory)[0].long;
+
 
     const description = d3.select('#description');
     description.node().innerHTML = settings.category.filter(obj => obj.short === currentCategory)[0].description;
