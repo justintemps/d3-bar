@@ -7,12 +7,24 @@ import setMenu from './menu';
 const { csv, category, margin, colors } = settings;
 const currentCategory = category[0].short;
 const currentTitle = category[0].long;
-const svg = d3.select('svg');
-const width = +svg.attr('width') - margin.left - margin.right;
-const height = +svg.attr('height') - margin.top - margin.bottom;
+
+const container = document.getElementById('chart-container');
+const width = container.offsetWidth - margin.left - margin.right;
+const height = container.offsetHeight - margin.top - margin.bottom;
+
+const svg = d3
+  .select('svg')
+  .attr('width', '100%')
+  .attr('height', '100%')
+  .attr('viewbox', `0 0 ${Math.min(width, height)} ${Math.min(width, height)}`)
+  .attr('preserveAspectRatio', 'xMinYMin');
+
+// const width = +svg.attr('width') - margin.left - margin.right;
+// const height = +svg.attr('height') - margin.top - margin.bottom;
 const g = svg
   .append('g')
   .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
 const x0 = d3
   .scaleBand()
   .rangeRound([0, width])
@@ -84,7 +96,7 @@ function drawChart() {
         .attr('text-anchor', 'start');
 
       // Title
-      d3.select('.chart-title').node().innerHTML = currentTitle
+      d3.select('.chart-title').node().innerHTML = currentTitle;
 
       const legend = g
         .append('g')
