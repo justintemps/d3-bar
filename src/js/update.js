@@ -1,31 +1,34 @@
-import * as d3 from 'd3';
+import { select } from 'd3-selection';
+import { scaleBand, scaleLinear, scaleOrdinal } from 'd3-scale';
+import { csv as getCSV } from 'd3-request';
+import { axisBottom, axisLeft } from 'd3-axis';
+import { max } from 'd3-array';
 import normalize from './normalize';
 import settings from './settings';
 import filter from './filter';
 
 const { csv, margin, colors } = settings;
-const svg = d3.select('svg');
+const svg = select('svg');
 const width = +svg.attr('width') - margin.left - margin.right;
 const height = +svg.attr('height') - margin.top - margin.bottom;
 
 function update(currentCategory) {
-  d3.csv(csv, normalize, (err, data) => {
+  getCSV(csv, normalize, (err, data) => {
     const currentData = filter(data, currentCategory);
     const keys = data.columns.slice(2);
-    const x0 = d3
-      .scaleBand()
+    const x0 = scaleBand()
       .rangeRound([0, width])
       .paddingInner(0.2);
-    const x1 = d3.scaleBand().padding(0.05);
-    const y = d3.scaleLinear().rangeRound([height, 0]);
-    const z = d3.scaleOrdinal().range(colors);
+    const x1 = scaleBand().padding(0.05);
+    const y = scaleLinear().rangeRound([height, 0]);
+    const z = scaleOrdinal().range(colors);
     // const t = d3.transition().duration(1000);
 
     x0.domain(currentData.map(obj => obj.country));
     x1.domain(keys).rangeRound([0, x0.bandwidth()]);
-    y.domain([0, d3.max(currentData, d => d3.max(keys, key => d[key]))]);
+    y.domain([0, max(currentData, d => max(keys, key => d[key]))]);
 
-    const plotarea = d3.select('.plotarea');
+    const plotarea = select('.plotarea');
 
     let countries = plotarea.selectAll('g').data(currentData, d => d.country);
 
@@ -63,18 +66,20 @@ function update(currentCategory) {
       .attr('stroke', '#fff');
 
     // Update X-Axis
-    svg.select('.x-axis').call(d3.axisBottom(x0));
+    svg.select('.x-axis').call(axisBottom(x0));
 
     // Update Y-Axis
-    svg.select('.y-axis').call(d3.axisLeft(y).ticks(null, 's'));
+    svg.select('.y-axis').call(axisLeft(y).ticks(null, 's'));
 
     // Update chart title
-    d3
-      .select('.chart-title').node().innerHTML = settings.category.filter(obj => obj.short === currentCategory)[0].long;
+    select('.chart-title').node().innerHTML = settings.category.filter(
+      obj => obj.short === currentCategory
+    )[0].long;
 
-
-    const description = d3.select('#description');
-    description.node().innerHTML = settings.category.filter(obj => obj.short === currentCategory)[0].description;
+    const description = select('#description');
+    description.node().innerHTML = settings.category.filter(
+      obj => obj.short === currentCategory
+    )[0].description;
   });
 }
 

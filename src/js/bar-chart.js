@@ -1,4 +1,8 @@
-import * as d3 from 'd3';
+import { select } from 'd3-selection';
+import { scaleBand, scaleLinear, scaleOrdinal } from 'd3-scale';
+import { csv as getCSV } from 'd3-request';
+import { axisBottom, axisLeft } from 'd3-axis';
+import { max } from 'd3-array';
 import settings from './settings';
 import normalize from './normalize';
 import filter from './filter';
@@ -7,22 +11,21 @@ import setMenu from './menu';
 const { csv, category, margin, colors } = settings;
 const currentCategory = category[0].short;
 const currentTitle = category[0].long;
-const svg = d3.select('svg');
+const svg = select('svg');
 const width = +svg.attr('width') - margin.left - margin.right;
 const height = +svg.attr('height') - margin.top - margin.bottom;
 const g = svg
   .append('g')
   .attr('transform', `translate(${margin.left}, ${margin.top})`);
-const x0 = d3
-  .scaleBand()
+const x0 = scaleBand()
   .rangeRound([0, width])
   .paddingInner(0.2);
-const x1 = d3.scaleBand().padding(0.05);
-const y = d3.scaleLinear().rangeRound([height, 0]);
-const z = d3.scaleOrdinal().range(colors);
+const x1 = scaleBand().padding(0.05);
+const y = scaleLinear().rangeRound([height, 0]);
+const z = scaleOrdinal().range(colors);
 
 function drawChart() {
-  d3.csv(
+  getCSV(
     csv,
     normalize,
     // Get data for currently selected category
@@ -40,7 +43,7 @@ function drawChart() {
 
       x0.domain(currentData.map(obj => obj.country));
       x1.domain(keys).rangeRound([0, x0.bandwidth()]);
-      y.domain([0, d3.max(currentData, d => d3.max(keys, key => d[key]))]);
+      y.domain([0, max(currentData, d => max(keys, key => d[key]))]);
 
       // Bars
       g
@@ -68,13 +71,13 @@ function drawChart() {
         .append('g')
         .attr('class', 'x-axis')
         .attr('transform', `translate(0,${height})`)
-        .call(d3.axisBottom(x0));
+        .call(axisBottom(x0));
 
       // Y-Axis
       g
         .append('g')
         .attr('class', 'y-axis')
-        .call(d3.axisLeft(y).ticks(null, 's'))
+        .call(axisLeft(y).ticks(null, 's'))
         .append('text')
         .attr('x', 2)
         .attr('y', y(y.ticks().pop()) + 0.5)
@@ -84,7 +87,7 @@ function drawChart() {
         .attr('text-anchor', 'start');
 
       // Title
-      d3.select('.chart-title').node().innerHTML = currentTitle
+      select('.chart-title').node().innerHTML = currentTitle;
 
       const legend = g
         .append('g')
@@ -123,7 +126,7 @@ function drawChart() {
         .text(d => settings.keys.filter(obj => obj.short === d)[0].long);
 
       // Set description
-      const description = d3.select('#description');
+      const description = select('#description');
       description.node().innerHTML = settings.category.filter(
         obj => obj.short === currentCategory
       )[0].description;

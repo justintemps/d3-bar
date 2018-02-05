@@ -3,7 +3,7 @@ function filter(data, currentCat) {
     obj =>
       obj.category === currentCat &&
       Object.values(obj).every(o => {
-        if (!isNaN(o) && o === 0) { // eslint-disable-line
+        if (!Number.isNaN(o) && o === 0) {
           return false;
         }
         return true;
