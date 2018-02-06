@@ -1,5 +1,5 @@
-import { select } from 'd3-selection';
-import * as transition from 'd3-transition';
+import { select, selection } from 'd3-selection';
+import { transition } from 'd3-transition';
 import { scaleBand, scaleLinear, scaleOrdinal } from 'd3-scale';
 import { csv as getCSV } from 'd3-request';
 import { axisBottom, axisLeft } from 'd3-axis';
@@ -8,43 +8,30 @@ import settings from './settings';
 import normalize from './normalize';
 import filter from './filter';
 
-const d3 = Object.assign(
-  {},
-  {
-    select,
-    scaleBand,
-    scaleLinear,
-    scaleOrdinal,
-    getCSV,
-    axisBottom,
-    axisLeft,
-    max
-  },
-  transition
-);
-
 const { csv, margin, colors } = settings;
-const svg = d3.select('svg');
+const svg = select('svg');
 const width = +svg.attr('width') - margin.left - margin.right;
 const height = +svg.attr('height') - margin.top - margin.bottom;
 
 function update(currentCategory) {
-  d3.getCSV(csv, normalize, (err, data) => {
+  getCSV(csv, normalize, (err, data) => {
     const currentData = filter(data, currentCategory);
     const keys = data.columns.slice(2);
-    const x0 = d3.scaleBand()
+    const x0 = scaleBand()
       .rangeRound([0, width])
       .paddingInner(0.2);
-    const x1 = d3.scaleBand().padding(0.05);
-    const y = d3.scaleLinear().rangeRound([height, 0]);
-    const z = d3.scaleOrdinal().range(colors);
-    // const t = d3.transition().duration(1000);
+    const x1 = scaleBand().padding(0.05);
+    const y = scaleLinear().rangeRound([height, 0]);
+    const z = scaleOrdinal().range(colors);
+    const t = transition().duration(1000);
 
     x0.domain(currentData.map(obj => obj.country));
     x1.domain(keys).rangeRound([0, x0.bandwidth()]);
-    y.domain([0, d3.max(currentData, d => d3.max(keys, key => d[key]))]);
+    y.domain([0, max(currentData, d => max(keys, key => d[key]))]);
 
-    const plotarea = d3.select('.plotarea');
+    // Use selection().select() to expose side effects
+    // from d3-transition
+    const plotarea = selection().select('.plotarea');
 
     let countries = plotarea.selectAll('g').data(currentData, d => d.country);
 
@@ -74,7 +61,7 @@ function update(currentCategory) {
     bars = enterBars
       .merge(bars)
       .attr('x', d => x1(d.key))
-      // .transition(t)
+      .transition(t)
       .attr('y', d => y(d.value))
       .attr('width', x1.bandwidth())
       .attr('height', d => height - y(d.value))
@@ -82,10 +69,10 @@ function update(currentCategory) {
       .attr('stroke', '#fff');
 
     // Update X-Axis
-    svg.select('.x-axis').call(d3.axisBottom(x0));
+    svg.select('.x-axis').call(axisBottom(x0));
 
     // Update Y-Axis
-    svg.select('.y-axis').call(d3.axisLeft(y).ticks(null, 's'));
+    svg.select('.y-axis').call(axisLeft(y).ticks(null, 's'));
 
     // Update chart title
     select('.chart-title').node().innerHTML = settings.category.filter(
