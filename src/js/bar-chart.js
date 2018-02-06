@@ -1,4 +1,5 @@
 import { select } from 'd3-selection';
+import * as transition from 'd3-transition';
 import { scaleBand, scaleLinear, scaleOrdinal } from 'd3-scale';
 import { csv as getCSV } from 'd3-request';
 import { axisBottom, axisLeft } from 'd3-axis';
@@ -8,10 +9,25 @@ import normalize from './normalize';
 import filter from './filter';
 import setMenu from './menu';
 
+const d3 = Object.assign(
+  {},
+  {
+    select,
+    scaleBand,
+    scaleLinear,
+    scaleOrdinal,
+    getCSV,
+    axisBottom,
+    axisLeft,
+    max
+  },
+  transition
+);
+
 const { csv, category, margin, colors } = settings;
 const currentCategory = category[0].short;
 const currentTitle = category[0].long;
-const svg = select('svg');
+const svg = d3.select('svg');
 const width = +svg.attr('width') - margin.left - margin.right;
 const height = +svg.attr('height') - margin.top - margin.bottom;
 const g = svg
@@ -25,7 +41,7 @@ const y = scaleLinear().rangeRound([height, 0]);
 const z = scaleOrdinal().range(colors);
 
 function drawChart() {
-  getCSV(
+  d3.getCSV(
     csv,
     normalize,
     // Get data for currently selected category
@@ -87,7 +103,7 @@ function drawChart() {
         .attr('text-anchor', 'start');
 
       // Title
-      select('.chart-title').node().innerHTML = currentTitle;
+      d3.select('.chart-title').node().innerHTML = currentTitle;
 
       const legend = g
         .append('g')
