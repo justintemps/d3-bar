@@ -33,10 +33,13 @@ function update(currentCategory) {
     // from d3-transition
     const plotarea = selection().select('.plotarea');
 
+    // Update countries with new data
     let countries = plotarea.selectAll('g').data(currentData, d => d.country);
 
+    // Get rid of any extra countries
     countries.exit().remove();
 
+    // Add new countries
     const enter = countries
       .enter()
       .append('g')
@@ -51,19 +54,17 @@ function update(currentCategory) {
       .selectAll('rect')
       .data(d => keys.map(key => ({ key, value: d[key] })));
 
+    // Remove bars that don't belong
     bars.exit().remove();
 
-    const enterBars = bars
-      .enter()
-      .append('rect')
-      .attr('width', x1.bandwidth());
+    // Add new bars if there are any
+    const enterBars = bars.enter().append('rect');
 
-    bars = enterBars
-      .merge(bars)
-      .attr('x', d => x1(d.key))
+    bars = enterBars.merge(bars).attr('width', x1.bandwidth());
+
+    bars.attr('x', d => x1(d.key))
       .transition(t)
       .attr('y', d => y(d.value))
-      .attr('width', x1.bandwidth())
       .attr('height', d => height - y(d.value))
       .attr('fill', d => z(d.key))
       .attr('stroke', '#fff');

@@ -24,6 +24,7 @@ const plugins = [
   })
 ];
 
+
 if (ENV === 'production') {
   plugins.push(new UglifyJSPlugin());
 }
