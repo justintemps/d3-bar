@@ -17,26 +17,25 @@ function update(currentCategory) {
   getCSV(csv, normalize, (err, data) => {
     const currentData = filter(data, currentCategory);
     const keys = data.columns.slice(2);
+
+    // Set our scales and domains
     const x0 = scaleBand()
       .rangeRound([0, width])
       .paddingInner(0.2);
     const x1 = scaleBand().padding(0.05);
     const y = scaleLinear().rangeRound([height, 0]);
     const z = scaleOrdinal().range(colors);
-    const t = transition().duration(1000);
-
     x0.domain(currentData.map(obj => obj.country));
     x1.domain(keys).rangeRound([0, x0.bandwidth()]);
     y.domain([0, max(currentData, d => max(keys, key => d[key]))]);
 
-    // Use selection().select() to expose side effects
-    // from d3-transition
+    // selection().select() exposes d3-transition side effects
     const plotarea = selection().select('.plotarea');
 
     // Update countries with new data
-    let countries = plotarea.selectAll('g').data(currentData, d => d.country);
+    const countries = plotarea.selectAll('g').data(currentData, d => d.country);
 
-    // Get rid of any extra countries
+    // Git rid of extra countries
     countries.exit().remove();
 
     // Add new countries
@@ -45,25 +44,35 @@ function update(currentCategory) {
       .append('g')
       .attr('class', '.country');
 
-    countries = enter
+    // Merge with enter selection
+    const newCountries = enter
       .merge(countries)
       .attr('transform', d => `translate(${x0(d.country)},0)`); // estlint-disable-line */
 
-    // Update bars
-    let bars = countries
+    // Update bars with new data
+    const bars = newCountries
       .selectAll('rect')
       .data(d => keys.map(key => ({ key, value: d[key] })));
 
-    // Remove bars that don't belong
+    // Remove extra bars
     bars.exit().remove();
 
-    // Add new bars if there are any
+    // Add new bars
     const enterBars = bars.enter().append('rect');
 
-    bars = enterBars.merge(bars).attr('width', x1.bandwidth());
+    // Merge new bars
+    const allBars = enterBars
+      .merge(bars)
+      .attr('width', x1.bandwidth())
+      .attr('x', d => x1(d.key));
 
-    bars.attr('x', d => x1(d.key))
-      .transition(t)
+    allBars
+      .transition().duration(750).delay(0)
+      .attr('y', height)
+      .attr('height', 0);
+
+    allBars
+      .transition().duration(750).delay(750)
       .attr('y', d => y(d.value))
       .attr('height', d => height - y(d.value))
       .attr('fill', d => z(d.key))
