@@ -12,9 +12,15 @@ const container = document.getElementById('chart-container');
 const { csv, category, margin, colors } = settings;
 const currentCategory = category[0].short;
 const currentTitle = category[0].long;
-const svg = select('svg');
 const width = container.offsetWidth - margin.left - margin.right;
 const height = container.offsetHeight - margin.top - margin.bottom;
+
+const svg = select('svg')
+  .attr('width', '100%')
+  .attr('height', '100%')
+  .attr('viewbox', `0 0 ${Math.min(width, height)} ${Math.min(width, height)}`)
+  .attr('preserveAspectRatio', 'xMinYMin');
+
 const g = svg
   .append('g')
   .attr('transform', `translate(${margin.left}, ${margin.top})`);
