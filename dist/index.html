@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>D3 Bar Chart</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="bundle.css" rel="stylesheet"></head>
   <body>
     <div class="container">
@@ -10,7 +11,9 @@
       <div class="select-wrapper">
         <select></select>
       </div>
-      <svg width="846" height="700"></svg>
+      <div id="chart-container">
+        <svg></svg>
+      </div>
       <div class="description-wrapper">
         <p id="description"></p>
         <p class="source">OECD/ILO (2018), How Immigrants Contribute to Developing Countries' Economies, OECD Publishing, Paris.</p>
