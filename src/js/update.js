@@ -10,10 +10,11 @@ import normalize from './normalize';
 import filter from './filter';
 import './array-compare';
 
+const container = document.getElementById('chart-container');
 const { csv, margin, colors } = settings;
 const svg = select('svg');
-const width = +svg.attr('width') - margin.left - margin.right;
-const height = +svg.attr('height') - margin.top - margin.bottom;
+const width = container.offsetWidth - margin.left - margin.right;
+const height = container.offsetHeight - margin.top - margin.bottom;
 
 function update(currentCategory) {
   getCSV(csv, normalize, (err, data) => {

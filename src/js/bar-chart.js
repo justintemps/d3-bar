@@ -8,12 +8,13 @@ import normalize from './normalize';
 import filter from './filter';
 import setMenu from './menu';
 
+const container = document.getElementById('chart-container');
 const { csv, category, margin, colors } = settings;
 const currentCategory = category[0].short;
 const currentTitle = category[0].long;
 const svg = select('svg');
-const width = +svg.attr('width') - margin.left - margin.right;
-const height = +svg.attr('height') - margin.top - margin.bottom;
+const width = container.offsetWidth - margin.left - margin.right;
+const height = container.offsetHeight - margin.top - margin.bottom;
 const g = svg
   .append('g')
   .attr('transform', `translate(${margin.left}, ${margin.top})`);
