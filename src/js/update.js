@@ -4,9 +4,11 @@ import { scaleBand, scaleLinear, scaleOrdinal } from 'd3-scale';
 import { csv as getCSV } from 'd3-request';
 import { axisBottom, axisLeft } from 'd3-axis';
 import { max } from 'd3-array';
+import { updateTitle, updateDescription } from './update-utils';
 import settings from './settings';
 import normalize from './normalize';
 import filter from './filter';
+import './array-compare';
 
 const { csv, margin, colors } = settings;
 const svg = select('svg');
@@ -17,6 +19,12 @@ function update(currentCategory) {
   getCSV(csv, normalize, (err, data) => {
     const currentData = filter(data, currentCategory);
     const keys = data.columns.slice(2);
+    const oldAxis = svg
+      .select('.x-axis')
+      .html()
+      .match(/>(.*?)</g)
+      .filter(val => val !== '><')
+      .map(str => str.substring(1, str.length - 1));
 
     // Set our scales and domains
     const x0 = scaleBand()
@@ -34,65 +42,146 @@ function update(currentCategory) {
 
     // Update countries with new data
     const countries = plotarea.selectAll('g').data(currentData, d => d.country);
+    let enter;
+    let newCountries;
+    let bars;
+    let enterBars;
+    let allBars;
 
-    // Git rid of extra countries
-    countries.exit().remove();
+    // Check to see if the axis changed
+    if (!oldAxis.compare(x0.domain())) {
+      // If it did, zero out all the bars first
+      svg
+        .selectAll('rect')
+        .transition()
+        .duration(500)
+        .delay(0)
+        .attr('y', height)
+        .attr('height', 0);
 
-    // Add new countries
-    const enter = countries
-      .enter()
-      .append('g')
-      .attr('class', '.country');
+      setTimeout(() => {
+        // Then get rid of extra countries
+        countries.exit().remove();
 
-    // Merge with enter selection
-    const newCountries = enter
-      .merge(countries)
-      .attr('transform', d => `translate(${x0(d.country)},0)`); // estlint-disable-line */
+        // Add any new countries
+        enter = countries
+          .enter()
+          .append('g')
+          .attr('class', '.country');
 
-    // Update bars with new data
-    const bars = newCountries
-      .selectAll('rect')
-      .data(d => keys.map(key => ({ key, value: d[key] })));
+        // Merge with enter selection
+        newCountries = enter
+          .merge(countries)
+          .attr('transform', d => `translate(${x0(d.country)},0)`); // estlint-disable-line */
 
-    // Remove extra bars
-    bars.exit().remove();
+        // Update bars with new data
+        bars = newCountries
+          .selectAll('rect')
+          .data(d => keys.map(key => ({ key, value: d[key] })));
 
-    // Add new bars
-    const enterBars = bars.enter().append('rect');
+        // Remove extra bars
+        bars.exit().remove();
 
-    // Merge new bars
-    const allBars = enterBars
-      .merge(bars)
-      .attr('width', x1.bandwidth())
-      .attr('x', d => x1(d.key));
+        // Update bars with new data
+        bars = newCountries
+          .selectAll('rect')
+          .data(d => keys.map(key => ({ key, value: d[key] })));
 
-    allBars
-      .transition().duration(750).delay(0)
-      .attr('y', height)
-      .attr('height', 0);
+        // Remove extra bars
+        bars.exit().remove();
 
-    allBars
-      .transition().duration(750).delay(750)
-      .attr('y', d => y(d.value))
-      .attr('height', d => height - y(d.value))
-      .attr('fill', d => z(d.key))
-      .attr('stroke', '#fff');
+        // Add new bars
+        enterBars = bars.enter().append('rect');
+
+        // Merge new bars
+        allBars = enterBars
+          .merge(bars)
+          .attr('width', x1.bandwidth())
+          .attr('x', d => x1(d.key))
+
+        allBars
+          .attr('width', x1.bandwidth())
+          .attr('x', d => x1(d.key))
+          .attr('y', height)
+          .attr('height', 0);
+
+        allBars
+          .transition()
+          .duration(500)
+          .attr('y', d => y(d.value))
+          .attr('height', d => height - y(d.value))
+          .attr('fill', d => z(d.key))
+          .attr('stroke', '#fff');
+
+      }, 500);
+
+    } else {
+      // Then get rid of extra countries
+      countries.exit().remove();
+
+      // Add any new countries
+      enter = countries
+        .enter()
+        .append('g')
+        .attr('class', '.country');
+
+      // Merge with enter selection
+      newCountries = enter
+        .merge(countries)
+        .attr('transform', d => `translate(${x0(d.country)},0)`); // estlint-disable-line */
+
+      // Update bars with new data
+      bars = newCountries
+        .selectAll('rect')
+        .data(d => keys.map(key => ({ key, value: d[key] })));
+
+      // Remove extra bars
+      bars.exit().remove();
+
+      // Update bars with new data
+      bars = newCountries
+        .selectAll('rect')
+        .data(d => keys.map(key => ({ key, value: d[key] })));
+
+      // Remove extra bars
+      bars.exit().remove();
+
+      // Add new bars
+      enterBars = bars.enter().append('rect');
+
+      // Merge new bars
+      allBars = enterBars
+        .merge(bars)
+        .attr('width', x1.bandwidth())
+        .attr('x', d => x1(d.key))
+
+      allBars
+        .transition()
+        .duration(750)
+        .attr('y', d => y(d.value))
+        .attr('height', d => height - y(d.value))
+        .attr('fill', d => z(d.key))
+        .attr('stroke', '#fff');
+    }
 
     // Update X-Axis
-    svg.select('.x-axis').call(axisBottom(x0));
+    svg
+      .select('.x-axis')
+      .transition()
+      .delay(500)
+      .duration(500)
+      .call(axisBottom(x0));
 
     // Update Y-Axis
-    svg.select('.y-axis').call(axisLeft(y).ticks(null, 's'));
+    svg
+      .select('.y-axis')
+      .transition()
+      .delay(500)
+      .duration(500)
+      .call(axisLeft(y).ticks(null, 's'));
 
-    // Update chart title
-    select('.chart-title').node().innerHTML = settings.category.filter(
-      obj => obj.short === currentCategory
-    )[0].long;
-
-    const description = select('#description');
-    description.node().innerHTML = settings.category.filter(
-      obj => obj.short === currentCategory
-    )[0].description;
+    updateTitle(currentCategory);
+    updateDescription(currentCategory);
   });
 }
 
