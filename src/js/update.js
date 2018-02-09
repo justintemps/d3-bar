@@ -52,7 +52,7 @@ function update(currentCategory) {
     // Check to see if the axis changed
     if (!oldAxis.compare(x0.domain())) {
       // If it did, zero out all the bars first
-      svg
+      plotarea
         .selectAll('rect')
         .transition()
         .duration(500)
