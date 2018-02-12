@@ -1,3 +1,5 @@
+import './polyfills';
+
 function filter(data, currentCat) {
   return data.filter(
     obj =>

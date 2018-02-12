@@ -20,6 +20,7 @@ function update(currentCategory) {
   getCSV(csv, normalize, (err, data) => {
     const currentData = filter(data, currentCategory);
     const keys = data.columns.slice(2);
+
     // @TODO this is a horrible hack, replace with proper state management
     const oldAxis = svg
       .select('.x-axis')
