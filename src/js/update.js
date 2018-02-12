@@ -20,6 +20,7 @@ function update(currentCategory) {
   getCSV(csv, normalize, (err, data) => {
     const currentData = filter(data, currentCategory);
     const keys = data.columns.slice(2);
+    // @TODO this is a horrible hack, replace with proper state management
     const oldAxis = svg
       .select('.x-axis')
       .html()
@@ -114,6 +115,20 @@ function update(currentCategory) {
           .attr('fill', d => z(d.key))
           .attr('stroke', '#fff');
 
+          // Update X-Axis
+          svg
+            .select('.x-axis')
+            .transition()
+            .duration(500)
+            .call(axisBottom(x0));
+
+          // Update Y-Axis
+          svg
+            .select('.y-axis')
+            .transition()
+            .duration(500)
+            .call(axisLeft(y).ticks(null, 's'));
+
       }, 500);
 
     } else {
@@ -163,23 +178,23 @@ function update(currentCategory) {
         .attr('height', d => height - y(d.value))
         .attr('fill', d => z(d.key))
         .attr('stroke', '#fff');
+
+        // Update X-Axis
+        svg
+          .select('.x-axis')
+          .transition()
+          .duration(750)
+          .call(axisBottom(x0));
+
+        // Update Y-Axis
+        svg
+          .select('.y-axis')
+          .transition()
+          .duration(750)
+          .call(axisLeft(y).ticks(null, 's'));
     }
 
-    // Update X-Axis
-    svg
-      .select('.x-axis')
-      .transition()
-      .delay(500)
-      .duration(500)
-      .call(axisBottom(x0));
 
-    // Update Y-Axis
-    svg
-      .select('.y-axis')
-      .transition()
-      .delay(500)
-      .duration(500)
-      .call(axisLeft(y).ticks(null, 's'));
 
     updateTitle(currentCategory);
     updateDescription(currentCategory);
